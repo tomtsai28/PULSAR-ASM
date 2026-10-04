@@ -1,0 +1,72 @@
+# ========================================================
+# Git Ignore Rules for PULSAR-ASM & AI_PROJECT_SEED
+# ========================================================
+
+# 1. Heavy Model Weights (>100MB rejected by GitHub)
+pulsar_asm/models/
+*.safetensors
+*.gguf
+
+# 2. Python Cache & Build Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.tmp
+*.log
+*.obj
+
+# 3. Snapshot Backups
+.snapshots/
+doc/.ai_stop
+
+# 4. Explicitly KEEP the <5KB Assembly Engine Binaries!
+!pulsar_asm/bin/*.bin
+
+# 5. Proprietary Confidential BOM Theory Documents (Local Only)
+doc/補齊的五大BOM 拓撲未解天塹.md
+doc/BOM 拓撲組合（Spectrum Permutation）的數學保真性.md
+
+# 6. AI_PROJECT_SEED Scaffolding Files (Local Only)
+rules/
+scripts/
+src/
+tools/
+AGENTS.md
+ai.bat
+core_bootloader.py
+project_profile.json
+doc/ai_private_bookmarks.json
+doc/implementation_plan.md
+doc/session_synapse.json
+doc/快速移植指引.md
+
+# 7. Internal Factory Test Jigs (Local Only)
+pulsar_asm/tests/
+
+# 8. Windows Executables & Temporary Object Files
+*.exe
+!pulsar_asm/tools/fasm.exe
+
+# 9. Legacy Stories-15M Prototype & FASM SDK Includes (Local Only)
+pulsar_asm/run_story.py
+pulsar_asm/engine/pulsar_engine*
+pulsar_asm/engine/gemma_engine_main.asm
+pulsar_asm/engine/gemma_engine.exe
+pulsar_asm/sub_assemblies/sub_attention_block*
+pulsar_asm/sub_assemblies/sub_ffn_swiglu*
+pulsar_asm/sub_assemblies/sub_transformer_layer*
+pulsar_asm/raw_materials/test_*
+pulsar_asm/raw_materials/mat_simd_gemv_avx2*
+pulsar_asm/raw_materials/mat_fast_rsqrt_lut*
+pulsar_asm/raw_materials/mat_exp_softmax_lut.asm
+pulsar_asm/raw_materials/mat_stream_gemv_avx2_flat.asm
+pulsar_asm/raw_materials/mat_win64_io.asm
+pulsar_asm/raw_materials/gemv_avx2.bin
+pulsar_asm/raw_materials/rmsnorm_avx2.bin
+pulsar_asm/raw_materials/softmax_avx2.bin
+pulsar_asm/raw_materials/stream_gemv_avx2.bin
+pulsar_asm/tools/INCLUDE/
+
+
+
+
