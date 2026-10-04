@@ -56,6 +56,30 @@ kernel32.UnmapViewOfFile.argtypes = [ctypes.c_void_p]
 
 user32 = ctypes.windll.user32
 
+# ------------------------------------------------------------------------------
+# Disable Windows QuickEdit Mode to prevent mouse clicks from freezing execution
+# ------------------------------------------------------------------------------
+def disable_quickedit_mode():
+    try:
+        STD_INPUT_HANDLE = -10
+        ENABLE_QUICK_EDIT_MODE = 0x0040
+        ENABLE_EXTENDED_FLAGS = 0x0080
+        kernel32.GetStdHandle.restype = ctypes.c_void_p
+        kernel32.GetStdHandle.argtypes = [ctypes.c_int32]
+        kernel32.GetConsoleMode.restype = ctypes.c_bool
+        kernel32.GetConsoleMode.argtypes = [ctypes.c_void_p, ctypes.c_void_p]
+        kernel32.SetConsoleMode.restype = ctypes.c_bool
+        kernel32.SetConsoleMode.argtypes = [ctypes.c_void_p, ctypes.c_uint32]
+
+        h_stdin = kernel32.GetStdHandle(STD_INPUT_HANDLE)
+        mode = ctypes.c_uint32()
+        if kernel32.GetConsoleMode(h_stdin, ctypes.byref(mode)):
+            kernel32.SetConsoleMode(h_stdin, (mode.value & ~ENABLE_QUICK_EDIT_MODE) | ENABLE_EXTENDED_FLAGS)
+    except Exception:
+        pass
+
+disable_quickedit_mode()
+
 class GemmaEngineContext(ctypes.Structure):
     _fields_ = [
         ("x", ctypes.c_void_p),
