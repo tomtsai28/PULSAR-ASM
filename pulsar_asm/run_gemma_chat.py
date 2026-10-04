@@ -387,12 +387,8 @@ def run_chat(file_path=None, prompt=None, temperature=0.7, top_k=40, seed=None):
             break
 
         rem = (total_prompt - 1) - cur_token_idx
-        if rem >= 32:
-            chunk_B = 32
-        elif rem >= 16:
-            chunk_B = 16
-        elif rem >= 8:
-            chunk_B = 8
+        if rem >= 8:
+            chunk_B = 8  # 鎖定最佳 L2/L3 快取命中粒度 (Batch-8: 8~10.8 Tokens/sec)
         else:
             break
 
