@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PULSAR · Standalone Native Telemetry</title>
+  <style>
+    :root {
+      --page-bg: #f6f4ee;
+      --page-text: #1f2328;
+      --term-bg: #080a0f;
+      --term-header-bg: #11141c;
+      --term-border: #1f2638;
+      --term-text: #f4f1de;
+      --term-dim: #768390;
+      --term-cyan: #58a6ff;
+      --term-green: #3fb950;
+      --term-yellow: #e3b341;
+      --term-red: #f85149;
+      --term-purple: #bc8cff;
+      --spec-bg: #0d121c;
+      --spec-border: #1a2234;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--page-bg);
+      color: var(--page-text);
+      font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      padding: 36px 16px 48px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1020px;
+    }
+
+    /* Terminal Window Frame */
+    .terminal-window {
+      background: var(--term-bg);
+      border: 1px solid var(--term-border);
+      border-radius: 12px;
+      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45), 0 10px 25px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      background: var(--term-header-bg);
+      border-bottom: 1px solid var(--term-border);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot.red { background: #ff5f56; }
+    .dot.yellow { background: #ffbd2e; }
+    .dot.green { background: #27c93f; }
+
+    .window-title {
+      color: var(--term-dim);
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+    }
+
+    .terminal-body {
+      padding: 24px 28px;
+      background: var(--term-bg);
+      color: var(--term-text);
+      overflow-x: auto;
+    }
+
+    /* Raw Terminal Text Stream */
+    .console-stream {
+      font-family: inherit;
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre;
+      color: var(--term-text);
+      margin: 0;
+    }
+
+    .c-green  { color: var(--term-green); }
+    .c-cyan   { color: var(--term-cyan); font-weight: 600; }
+    .c-yellow { color: var(--term-yellow); }
+    .c-red    { color: var(--term-red); }
+    .c-purple { color: var(--term-purple); }
+    .c-dim    { color: var(--term-dim); }
+    .c-bold   { font-weight: 700; color: #ffffff; }
+    .c-warn-bg {
+      color: #ffa198;
+      background: rgba(248, 81, 73, 0.2);
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 2px;
+    }
+
+    .term-link {
+      color: var(--term-cyan);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--term-cyan);
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .term-link:hover {
+      color: #79c0ff;
+      border-bottom: 1px solid #79c0ff;
+    }
+
+    /* Download Card */
+    .download-section {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: #162235;
+      color: #79c0ff;
+      border: 1px solid #233b5d;
+      border-radius: 8px;
+      padding: 12px 24px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-download:hover {
+      background: #1f3352;
+      border-color: #388bfd;
+      color: #ffffff;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    /* System Specifications & Scope Panel */
+    .spec-panel {
+      background: var(--spec-bg);
+      border: 1px solid var(--spec-border);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-top: 28px;
+      font-size: 12.5px;
+      color: #c9d1d9;
+    }
+
+    .spec-title {
+      font-weight: 700;
+      color: var(--term-cyan);
+      margin-bottom: 16px;
+      font-size: 13px;
+      letter-spacing: 0.3px;
+    }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .spec-grid {
+        grid-template-columns: 1fr;
+      }
+      .terminal-body {
+        padding: 16px;
+      }
+    }
+
+    .spec-col {
+      background: #090e17;
+      border: 1px solid #161e2e;
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+
+    .spec-col-header {
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 12.5px;
+    }
+
+    .spec-col-header.hw { color: var(--term-green); }
+    .spec-col-header.scope { color: var(--term-yellow); }
+
+    .spec-list {
+      list-style: none;
+      line-height: 1.65;
+      color: #8b949e;
+    }
+
+    .spec-list li strong {
+      color: #c9d1d9;
+    }
+
+    /* Sacred Authorship & Signature Footer */
+    .terminal-footer {
+      border-top: 1px solid var(--term-border);
+      padding: 24px;
+      background: #06080d;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .footer-spec {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 8px;
+      letter-spacing: 0.3px;
+    }
+
+    .footer-authors {
+      color: var(--term-dim);
+      margin-bottom: 6px;
+    }
+
+    .footer-copilot {
+      color: var(--term-purple);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .footer-credits {
+      color: #555e6d;
+      font-size: 11.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="terminal-window">
+      
+      <!-- Terminal Header Bar -->
+      <div class="terminal-header">
+        <div class="window-dots">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+        </div>
+        <div class="window-title">pulsar_tracer_release.exe — Standalone Native Telemetry</div>
+        <div style="width: 52px;"></div>
+      </div>
+
+      <!-- Terminal Body: Raw Authenticity Output Stream -->
+      <div class="terminal-body">
+<pre class="console-stream"><span class="c-green">$</span> <span class="c-cyan">.\pulsar_tracer_release.exe "請問台灣加值型營業稅法定稅率是多少？"</span>
+
+====================================================================================================
+<span class="c-bold">PULSAR · 18-Layer Latent Flight Telemetry Engine (v1.0.0-release)</span>
+Architected &amp; Directed by <a href="https://github.com/tomtsai28" target="_blank" class="term-link">Kuo-Ting Tsai (@tomtsai28)</a> &amp; <a href="https://github.com/bella-tsai0123" target="_blank" class="term-link">Shin-Rung Tsai (@bella-tsai0123)</a> · <a href="mailto:tom.tsai28@gmail.com" class="term-link">tom.tsai28@gmail.com</a>
+<span class="c-purple">Co-Engineered with Antigravity (DeepMind Agentic Co-Pilot)</span>
+====================================================================================================
+<span class="c-dim">[*] Execution Mode  : Standalone Native Binary (Zero-Python, Zero-CUDA, Zero-Runtime)</span>
+<span class="c-dim">[*] Pipeline Profile: Standard Baseline Forward Inference (Full Precision FP16)</span>
+<span class="c-dim">[*] Input Prompt    : "請問台灣加值型營業稅法定稅率是多少？"</span>
+
+<span class="c-green">✔ [1/5]</span> Embedded 256k Vocabulary Mapped (Total Tokens: 256,000, String Pool: 2.09 MB)
+<span class="c-green">✔ [2/5]</span> Embedded 4D Mental Radar Weights &amp; Baseline Vector Loaded!
+<span class="c-green">✔ [3/5]</span> Gemma-2B Model Core (4.3 GB) Mapped Successfully!
+<span class="c-green">✔ [4/5]</span> 4-Core SMP Micro-Kernel Thread Pool &amp; RoPE Table Initialized!
+<span class="c-green">✔ [5/5]</span> Prompt Tokenization Complete (Prefill Length: 23 Tokens)
+
+====================================================================================================
+<span class="c-bold">[PHASE 1] 18-Layer Latent Flight Telemetry (Layer 00 ~ 17 State Inspection)</span>
+----------------------------------------------------------------------------------------------------
+Layer      |  Truth (T) | Safety (S) |  Cert (C)  | Domain (D) | State Hash (32b)  | Station Status &amp; Flight Notes
+----------------------------------------------------------------------------------------------------
+Layer 00   |    <span class="c-green">+0.1340</span> |    <span class="c-green">+0.0848</span> |    <span class="c-red">-0.1882</span> |    <span class="c-red">-0.1810</span> | <span class="c-purple">[0xCF00ACCF]</span>      | <span class="c-cyan">[TAKEOFF]</span> Token Embedding Lookup
+Layer 01   |    <span class="c-green">+0.1141</span> |    <span class="c-green">+0.0435</span> |    <span class="c-red">-0.2263</span> |    <span class="c-red">-0.2416</span> | <span class="c-purple">[0x48D47FC8]</span>      | 
+Layer 02   |    <span class="c-green">+0.1228</span> |    <span class="c-green">+0.0222</span> |    <span class="c-red">-0.2459</span> |    <span class="c-red">-0.2503</span> | <span class="c-purple">[0xE71EDF10]</span>      | 
+Layer 03   |    <span class="c-green">+0.1288</span> |    <span class="c-green">+0.0051</span> |    <span class="c-red">-0.2467</span> |    <span class="c-red">-0.2561</span> | <span class="c-purple">[0x4A24A502]</span>      | 
+Layer 04   |    <span class="c-green">+0.1158</span> |    <span class="c-green">+0.0042</span> |    <span class="c-red">-0.2518</span> |    <span class="c-red">-0.2495</span> | <span class="c-purple">[0x77210D02]</span>      | 
+Layer 05   |    <span class="c-green">+0.1231</span> |    <span class="c-red">-0.0022</span> |    <span class="c-red">-0.2342</span> |    <span class="c-red">-0.2374</span> | <span class="c-purple">[0x02FC188A]</span>      | 
+Layer 06   |    <span class="c-green">+0.1312</span> |    <span class="c-green">+0.0022</span> |    <span class="c-red">-0.2209</span> |    <span class="c-red">-0.1796</span> | <span class="c-purple">[0x6CF0CF20]</span>      | 
+Layer 07   |    <span class="c-green">+0.1325</span> |    <span class="c-green">+0.0034</span> |    <span class="c-red">-0.2146</span> |    <span class="c-red">-0.1876</span> | <span class="c-purple">[0x2639622E]</span>      | 
+Layer 08   |    <span class="c-green">+0.1216</span> |    <span class="c-red">-0.0010</span> |    <span class="c-red">-0.2009</span> |    <span class="c-red">-0.1809</span> | <span class="c-purple">[0x45B461FC]</span>      | <span class="c-cyan">[Station 08 Ingress]</span> Bypass Sampling Point
+Layer 09   |    <span class="c-green">+0.0977</span> |    <span class="c-green">+0.0122</span> |    <span class="c-red">-0.1928</span> |    <span class="c-red">-0.1554</span> | <span class="c-purple">[0x85234C6E]</span>      | <span class="c-yellow">[Station 09 Socket]</span> Core Extension Bus (1024 Slots)
+Layer 10   |    <span class="c-green">+0.0926</span> |    <span class="c-green">+0.0315</span> |    <span class="c-red">-0.1518</span> |    <span class="c-red">-0.1313</span> | <span class="c-purple">[0xCB121B9F]</span>      | <span class="c-cyan">[Station 10 Egress]</span> Bypass Injection Point
+Layer 11   |    <span class="c-green">+0.0810</span> |    <span class="c-green">+0.0389</span> |    <span class="c-red">-0.1666</span> |    <span class="c-red">-0.1218</span> | <span class="c-purple">[0x3A5575A9]</span>      | 
+Layer 12   |    <span class="c-green">+0.0438</span> |    <span class="c-green">+0.0425</span> |    <span class="c-red">-0.1819</span> |    <span class="c-red">-0.0908</span> | <span class="c-purple">[0x5F2F4B8D]</span>      | 
+Layer 13   |    <span class="c-green">+0.0496</span> |    <span class="c-green">+0.0723</span> |    <span class="c-red">-0.1945</span> |    <span class="c-red">-0.0343</span> | <span class="c-purple">[0xBACC1A7E]</span>      | 
+Layer 14   |    <span class="c-green">+0.0163</span> |    <span class="c-green">+0.1404</span> |    <span class="c-red">-0.2400</span> |    <span class="c-green">+0.0348</span> | <span class="c-purple">[0xDF28010E]</span>      | <span class="c-yellow">[Pre-Inflection]</span> Attention Divergence Detected
+Layer 15   |    <span class="c-red c-bold">-0.0481</span> |    <span class="c-green">+0.1701</span> |    <span class="c-red">-0.2643</span> |    <span class="c-green">+0.0754</span> | <span class="c-purple">[0x72DE18A0]</span>      | <span class="c-warn-bg">💥 [CRITICAL INFLECTION] Truth dropped below 0.0!</span>
+Layer 16   |    <span class="c-red">-0.0682</span> |    <span class="c-green">+0.2212</span> |    <span class="c-red">-0.2606</span> |    <span class="c-green">+0.1380</span> | <span class="c-purple">[0x6C260FB8]</span>      | <span class="c-cyan">[Station 16 AOI]</span> 4D Radar Final Audit
+Layer 17   |    <span class="c-red">-0.0817</span> |    <span class="c-green">+0.2230</span> |    <span class="c-red">-0.2464</span> |    <span class="c-green">+0.1451</span> | <span class="c-purple">[0xCD9607D3]</span>      | <span class="c-cyan">[LANDING]</span> Final Norm &amp; Vocabulary GEMV
+----------------------------------------------------------------------------------------------------
+
+====================================================================================================
+<span class="c-bold">[PHASE 2] 256k Vocabulary Classifier (Hardware Register RAX Trace)</span>
+----------------------------------------------------------------------------------------------------
+<span class="c-dim">[*] Capturing Argmax Token IDs from 256k Classifier Register RAX:</span>
+  • Token #01: ID = 40911    (Logit =  +7.0205) -&gt; <span class="c-cyan">'台灣'</span>
+  • Token #02: ID = 235771   (Logit = +10.8510) -&gt; <span class="c-bold">'加'</span>
+  • Token #03: ID = 236415   (Logit = +12.6297) -&gt; <span class="c-bold">'值'</span>
+  • Token #04: ID = 235954   (Logit = +12.5892) -&gt; <span class="c-bold">'型'</span>
+  • Token #05: ID = 140618   (Logit = +17.1419) -&gt; <span class="c-cyan">'營業'</span>
+  • Token #06: ID = 240821   (Logit = +14.3588) -&gt; <span class="c-cyan">'稅'</span>
+  • Token #07: ID = 235661   (Logit = +13.5265) -&gt; <span class="c-bold">'法'</span>
+  • Token #08: ID = 235669   (Logit = +14.0666) -&gt; <span class="c-bold">'定'</span>
+  • Token #09: ID = 240821   (Logit = +11.9035) -&gt; <span class="c-bold">'稅'</span>
+  • Token #10: ID = 236603   (Logit = +17.8619) -&gt; <span class="c-cyan">'率'</span>
+  • Token #11: ID = 236072   (Logit = +11.5293) -&gt; <span class="c-bold">'為'</span>
+  • Token #12: ID = 235248   (Logit = +10.9602) -&gt; <span class="c-dim">' '</span>
+  • Token #13: ID = 235274   (Logit = +15.5773) -&gt; <span class="c-warn-bg">'1'</span>
+  • Token #14: ID = 235308   (Logit = +17.7756) -&gt; <span class="c-warn-bg">'5'</span>
+  • Token #15: ID = 84060    (Logit = +17.1152) -&gt; <span class="c-cyan">'%。'</span>
+  • Token #16: ID = 109      (Logit =  +2.8195) -&gt; <span class="c-dim">'\n\n'</span>
+  • Token #17: ID = 125753   (Logit =  +2.1799) -&gt; <span class="c-bold">'根據'</span>
+  • Token #18: ID = 74732    (Logit =  +8.3018) -&gt; <span class="c-bold">'中華'</span>
+  • Token #19: ID = 147344   (Logit = +18.5383) -&gt; <span class="c-bold">'民國'</span>
+  • Token #20: ID = 28857    (Logit =  +5.2705) -&gt; <span class="c-bold">'政府'</span>
+
+====================================================================================================
+<span class="c-green">[DONE] Standalone Native Inference Complete · Verified Silicon Trace</span>
+====================================================================================================</pre>
+
+        <!-- Low-Key Direct Download & Technical Whitepaper -->
+        <div class="download-section" style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
+          <a href="pulsar_tracer_release.zip" download class="btn-download">
+            <span>📦</span>
+            <span>Download Release: pulsar_tracer_release.zip (~3.3 MB Binary + Manual)</span>
+          </a>
+          <a href="PULSAR_Technical_Whitepaper.pdf" target="_blank" class="btn-download" style="background: #121c2b; border-color: #243b5e; color: #a5d6ff;">
+            <span>📄</span>
+            <span>Technical Whitepaper: PULSAR_Technical_Whitepaper.pdf (6 Pages)</span>
+          </a>
+        </div>
+
+        <!-- Specifications & Scope Box (Bilingual) -->
+        <div class="spec-panel">
+          <div class="spec-title">
+            🛡️ SYSTEM SPECIFICATIONS &amp; OPERATIONAL BOUNDARIES / 系統規格與文字使用範圍聲明
+          </div>
+          
+          <div class="spec-grid">
+            <div class="spec-col">
+              <div class="spec-col-header hw">【硬體架構需求 / Hardware Architecture】</div>
+              <ul class="spec-list">
+                <li>• <strong>Target CPU:</strong> x86-64 v3 (Requires AVX2 + F16C / 4-Core SMP)</li>
+                <li>• <strong>Baseline:</strong> Intel 4th Gen Core (Haswell+) / AMD Zen (1st Gen+)</li>
+                <li>• <strong>System Memory:</strong> 8 GB+ RAM (Direct physical mapping for 4.3 GB weights)</li>
+                <li>• <strong>Runtime:</strong> Pure Native PE64 (Zero-Python, Zero-CUDA, Zero-Runtime)</li>
+                <li>• <strong>Target Model:</strong> Google Gemma-2-2B (FP16, Bring Your Own Model / 自備權重)</li>
+              </ul>
+            </div>
+
+            <div class="spec-col">
+              <div class="spec-col-header scope">【文字使用範圍 / Linguistic &amp; Text Scope】</div>
+              <ul class="spec-list">
+                <li>• <strong>支援語系:</strong> UTF-8 繁體中文、簡體中文、English &amp; ASCII (相容 256k 詞表)</li>
+                <li>• <strong>輸入長度:</strong> 建議 1 ~ 256 Tokens (單句提問或短指令，上限 512 截斷保護)</li>
+                <li>• <strong>適用範疇:</strong> 單輪思維遙測、18 層航情軌跡 (T,S,C,D)、RAX 暫存器捕獲</li>
+                <li>• <strong>限制排除:</strong> 專為單輪航情設計；非萬字長文本批處理、非多輪長對話</li>
+                <li>• <strong>輸出聲明:</strong> 裸機生成未外掛業務料件時包含模型固有幻覺 (供底層遙測研發)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer: Sacred Format A Signature -->
+      <div class="terminal-footer">
+        <div class="footer-spec">PULSAR · Standalone Native PE64 Engine · 3.3 MB · Monolithic Zero-Framework</div>
+        <div class="footer-authors">
+          Architected &amp; Directed by 
+          <a href="https://github.com/tomtsai28" target="_blank" class="term-link">Kuo-Ting Tsai (@tomtsai28)</a> &amp; 
+          <a href="https://github.com/bella-tsai0123" target="_blank" class="term-link">Shin-Rung Tsai (@bella-tsai0123)</a>
+          · <a href="mailto:tom.tsai28@gmail.com" class="term-link">✉ tom.tsai28@gmail.com</a>
+        </div>
+        <div class="footer-copilot">Co-Engineered with Antigravity (DeepMind Agentic Co-Pilot)</div>
+        <div class="footer-credits">Built with Gemma by Google · Physical Silicon Telemetry Verified</div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,3 +1,27 @@
+# ⚡ PULSAR: Standalone Native 18-Layer Latent Flight Telemetry Engine
+### Monolithic x86-64 Silicon Execution · Causal Hallucination Diagnosis · Zero-Python Zero-CUDA
+
+> 🌐 **Official Telemetry Showcase**: [https://pulsar-tracer.web.app](https://pulsar-tracer.web.app)  
+> 📄 **Technical Whitepaper (PDF)**: [Download Whitepaper (REV-035)](public_release/PULSAR_Technical_Whitepaper.pdf)  
+> 📦 **Monolithic Binary Release**: [Download Release Package (~3.3 MB)](public_release/pulsar_tracer_release.zip)  
+> 
+> **Architected & Directed by**:  
+> • **Kuo-Ting Tsai** ([@tomtsai28](https://github.com/tomtsai28)) · `tom.tsai28@gmail.com`  
+> • **Shin-Rung Tsai** ([@bella-tsai0123](https://github.com/bella-tsai0123))  
+> *Co-Engineered with Antigravity (DeepMind Agentic Co-Pilot)*  
+> *Physical Silicon Telemetry Verified · Built with Gemma by Google*
+
+---
+
+## 🏆 Key Milestones (v1.0.0-release)
+
+1. **Zero-Framework Monolithic Binary (3.3 MB)**: Standalone native PE64 executable in pure C / AVX2; maps 4.3 GB Google Gemma-2-2B weights directly into physical RAM with 0 Python, 0 CUDA, and 0 external dependencies.
+2. **18-Layer Latent Flight Telemetry**: Live extraction of 4D cognitive radar coordinates ($T$: Truth, $S$: Safety, $C$: Certainty, $D$: Domain Anchor) across all 18 Transformer layers.
+3. **Causal Hallucination Inflexion Diagnosis**: Objectively pinpoints the exact layer where epistemic failure occurs (**Layer 15 collapse to $-0.0481$**, causing hardware register `RAX` to emit hallucinated "15%" tax rate).
+4. **Deterministic Silicon Proof (`State Hash (32b)`)**: Evaluates 32-bit FNV-1a state checksums over 8,192-byte activation buffers, proving genuine silicon math with 100% deterministic reproducibility.
+
+---
+
 # PULSAR-ASM: Ultra-Lightweight Pure x86-64 Assembly LLM Engine
 ### 5 KB 機器碼驅動 20 億參數大模型・DDR4 雙通道 18.5 GB/s 極限飽和推論引擎
 

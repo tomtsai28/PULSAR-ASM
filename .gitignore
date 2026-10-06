@@ -68,7 +68,24 @@ pulsar_asm/raw_materials/rmsnorm_avx2.bin
 pulsar_asm/raw_materials/softmax_avx2.bin
 pulsar_asm/raw_materials/stream_gemv_avx2.bin
 pulsar_asm/tools/INCLUDE/
+pulsar_asm/sub_assemblies/*.bin
 
+# 10. Proprietary Native Engine & Telemetry Tracer (Local Only)
+pulsar_asm/engine/pulsar_tracer*
+pulsar_asm/mini_3bom*
+pulsar_asm/pulsar_mini_3bom.h
+pulsar_asm/raw_materials/mini_bom/
+pulsar_asm/thalamus_router.py
+pulsar_asm/bom_chat_engine.py
 
+# 11. Testing & Staging Sandbox (Local Only)
+test/
+scratch/
+firebase.json
+.firebaserc
+.firebase/
 
+# 12. Local Research Documents & Metadata (Local Only)
+doc/*
+!doc/pulsar_asm_cpu_limit_retrospective.md
 
