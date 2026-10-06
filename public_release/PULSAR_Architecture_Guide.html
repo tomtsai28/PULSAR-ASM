@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>PULSAR Architectural Note: Neuro-Symbolic Dual-Track Constraints &amp; Factory-Grade Error Prevention</title>
+<style>
+  @page {
+    size: A4;
+    margin: 16mm 15mm 16mm 15mm;
+    @top-left {
+      content: "PULSAR Architectural Note (PULSAR-ARCH-2026-001): Dual-Track Neuro-Symbolic Constraints";
+      font-size: 8pt;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #64748b;
+    }
+    @top-right {
+      content: "Defensive Publication · Prior Art";
+      font-size: 8pt;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #64748b;
+    }
+    @bottom-left {
+      content: "Architected by K.-T. Tsai & S.-R. Tsai · tom.tsai28@gmail.com";
+      font-size: 8pt;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #64748b;
+    }
+    @bottom-right {
+      content: "Page " counter(page);
+      font-size: 8pt;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #64748b;
+    }
+  }
+
+  body {
+    font-family: "Charter", "Georgia", "Cambria", "Times New Roman", "Noto Serif TC", serif;
+    font-size: 9.6pt;
+    line-height: 1.48;
+    color: #0f172a;
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+  }
+
+  /* Paper Header */
+  .title-area {
+    text-align: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #0f172a;
+  }
+
+  h1.paper-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+    font-size: 16pt;
+    font-weight: 800;
+    line-height: 1.25;
+    color: #0b1325;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.3px;
+  }
+
+  .paper-subtitle {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+    font-size: 11pt;
+    font-weight: 600;
+    color: #0284c7;
+    margin-bottom: 10px;
+  }
+
+  .author-block {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 9.5pt;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 4px;
+  }
+
+  .author-affil {
+    font-size: 8.5pt;
+    color: #64748b;
+    margin-bottom: 3px;
+  }
+
+  .doc-metadata {
+    font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", Consolas, monospace;
+    font-size: 8pt;
+    color: #475569;
+    margin-top: 6px;
+  }
+
+  /* Notice Badges */
+  .defensive-notice {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-left: 4px solid #0284c7;
+    border-radius: 4px;
+    padding: 8px 12px;
+    margin: 12px 0 16px 0;
+    font-size: 8.6pt;
+    color: #334155;
+    page-break-inside: avoid;
+  }
+
+  .defensive-notice strong {
+    color: #0369a1;
+  }
+
+  /* Abstract Block */
+  .abstract-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 8.8pt;
+    line-height: 1.45;
+    page-break-inside: avoid;
+  }
+
+  .abstract-title {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 700;
+    font-size: 9.2pt;
+    color: #0f172a;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Section Styling */
+  h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+    font-size: 11.5pt;
+    font-weight: 700;
+    color: #0f172a;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 4px;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+  }
+
+  h3 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif;
+    font-size: 10pt;
+    font-weight: 600;
+    color: #0369a1;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    page-break-after: avoid;
+  }
+
+  p {
+    margin: 0 0 7px 0;
+    text-align: justify;
+  }
+
+  /* Factory Metaphor Callout */
+  .poka-yoke-box {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-left: 3.5px solid #059669;
+    border-radius: 4px;
+    padding: 7px 11px;
+    margin: 8px 0 10px 0;
+    font-size: 8.8pt;
+    color: #065f46;
+    page-break-inside: avoid;
+  }
+
+  .poka-yoke-box strong {
+    color: #047857;
+  }
+
+  /* SVG Diagram Canvas */
+  .diagram-container {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 10px 0 12px 0;
+    text-align: center;
+    page-break-inside: avoid;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  }
+
+  .diagram-caption {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 8pt;
+    color: #64748b;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  /* Math and Formulas */
+  .formula-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 6px 12px;
+    margin: 8px 0;
+    text-align: center;
+    font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", Consolas, monospace;
+    font-size: 8.6pt;
+    color: #1e293b;
+    page-break-inside: avoid;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 8.5pt;
+    page-break-inside: avoid;
+  }
+
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 6px 9px;
+    text-align: left;
+  }
+
+  th {
+    background: #f1f5f9;
+    font-weight: 700;
+    color: #0f172a;
+  }
+
+  tr:nth-child(even) td {
+    background: #f8fafc;
+  }
+
+  /* Code snippet */
+  code {
+    font-family: ui-monospace, SFMono-Regular, "JetBrains Mono", monospace;
+    font-size: 8.2pt;
+    background: #f1f5f9;
+    padding: 1px 3px;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Title Area -->
+  <div class="title-area">
+    <h1 class="paper-title">PULSAR: Neuro-Symbolic Dual-Track Architecture &amp; Factory-Grade Error Prevention</h1>
+    <div class="paper-subtitle">神經符號雙軌約束架構與工業級防呆系統工程設計指南 (Architectural Note)</div>
+    
+    <div class="author-block">
+      <span class="author-name">Kuo-Ting Tsai (@tomtsai28)</span> &nbsp;•&nbsp; 
+      <span class="author-name">Shin-Rung Tsai (@bella-tsai0123)</span>
+    </div>
+    <div class="author-affil">Independent Systems &amp; Industrial Neural Architecture Laboratory · Tainan, Taiwan</div>
+    <div class="doc-metadata">
+      Document ID: <strong>PULSAR-ARCH-2026-001</strong> &nbsp;|&nbsp; 
+      Classification: <strong>Defensive Publication (Prior Art)</strong> &nbsp;|&nbsp; 
+      Date: <strong>October 2026</strong> &nbsp;|&nbsp; 
+      Online Repository: <a href="https://pulsar-tracer.web.app" style="color: #0284c7; text-decoration: none;">https://pulsar-tracer.web.app</a>
+    </div>
+  </div>
+
+  <!-- Defensive Notice -->
+  <div class="defensive-notice">
+    <strong>🛡️ 防禦性公開與先前技術宣告 (Defensive Publication &amp; Prior Art Notice)：</strong><br>
+    本工程架構指南所載之「語意引導器前置約束」、「0/100 數位剛性閘門」與「硬體級非同步 IRQ 中斷」等系統拓撲與資料流設計，特此作為<strong>公開防禦性技術文件（Prior Art）</strong>正式發布並永久留存。此舉旨在公開揭示製造業傳統資料庫與大語言模型（LLM）無縫接軌之確定性工程閉環，以確保全球製造業、開源社群及傳統產業在推動 AI 落地時，免受流氓專利蟑螂（Patent Trolls）之惡意訴訟與排他性阻礙。
+  </div>
+
+  <!-- Abstract Box -->
+  <div class="abstract-box">
+    <div class="abstract-title">Executive Abstract / 系統設計綱要</div>
+    <p>
+      大型語言模型（LLM）本質為高維連續向量空間之「類比機率推論（Analog Probabilistic Inference）」，具備跨領域語意聯想與生成優勢，但存在固有的機率幻覺（Hallucination）缺陷；相對地，製造業 ERP、總帳會計、庫存及貿易系統則屬於「確定性離散符號系統（Deterministic Discrete System）」，要求 100% 絕對正確與 ACID 交易原子性。將兩者生硬縫合往往導致致命的資料污染。
+    </p>
+    <p>
+      本文件發表 <strong>PULSAR 神經符號雙軌約束架構</strong>，以經典工業工程「豐田防呆（Poka-Yoke）」哲學為核心，建立三大物理級防線：(1) <strong>語意啟動引導器 (Semantic Bootloader)</strong>：於推論前自動將傳統結構（如 dBASE/DBF、SQL）編譯為不可破壞的 Synapse 不變量地圖並零成本預載；(2) <strong>混合 Token 路由與 0/100 剛性閘門 (Hybrid Token Routing &amp; 0/100 Gate)</strong>：將類比思考與數位檢驗徹底解耦，輸出端若有瑕疵即刻熔斷，並透過封閉迴路 PID 阻尼自適應調控推論超參數迫使模型自我校正；(3) <strong>非同步硬體中斷 (Asynchronous IRQ Interrupt)</strong>：於裸機推論迴圈每步植入輕量原子輪詢，支援即時物理煞車定格與無重啟熱載入。
+    </p>
+  </div>
+
+  <!-- Section 1 -->
+  <h2>1. 總綱：雙軌架構哲學 (Dual-Track Neuro-Symbolic Topology)</h2>
+  <p>
+    傳統 AI 系統試圖藉由調整 Prompt 誘使大模型生成合規資料，然而機率分布之長尾效應決定了錯誤率不可能為零。PULSAR 確立「類比思考負責理解發散、數位符號負責絕對把關」之雙軌原則。全系統資料流拓撲如下圖所示：
+  </p>
+
+  <!-- Topology SVG Diagram -->
+  <div class="diagram-container">
+    <svg width="100%" height="150" viewBox="0 0 760 150" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-reverse">
+          <path d="M 0 1 L 8 5 L 0 9 z" fill="#0284c7"/>
+        </marker>
+        <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-reverse">
+          <path d="M 0 1 L 8 5 L 0 9 z" fill="#059669"/>
+        </marker>
+        <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-reverse">
+          <path d="M 0 1 L 8 5 L 0 9 z" fill="#dc2626"/>
+        </marker>
+      </defs>
+
+      <!-- Step 1: Ingress Box -->
+      <rect x="10" y="25" width="160" height="95" rx="6" fill="#f0f9ff" stroke="#0284c7" stroke-width="1.5"/>
+      <text x="90" y="48" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#0369a1" text-anchor="middle">【入口約束防線】</text>
+      <text x="90" y="68" font-family="-apple-system, sans-serif" font-size="10" fill="#334155" text-anchor="middle">實體資料庫 (DBF/SQL)</text>
+      <text x="90" y="86" font-family="-apple-system, sans-serif" font-size="9" font-weight="600" fill="#0284c7" text-anchor="middle">Semantic Bootloader</text>
+      <text x="90" y="104" font-family="monospace" font-size="8.5" fill="#64748b" text-anchor="middle">→ Synapse Map (憲法)</text>
+
+      <!-- Arrow 1 -> 2 -->
+      <line x1="170" y1="72" x2="228" y2="72" stroke="#0284c7" stroke-width="1.8" marker-end="url(#arrow)"/>
+      <text x="200" y="65" font-family="-apple-system, sans-serif" font-size="7.5" fill="#64748b" text-anchor="middle">前置注入</text>
+
+      <!-- Step 2: Core LLM Box -->
+      <rect x="230" y="20" width="190" height="105" rx="6" fill="#fffbeb" stroke="#d97706" stroke-width="1.5"/>
+      <text x="325" y="44" font-family="-apple-system, sans-serif" font-size="11" font-weight="700" fill="#b45309" text-anchor="middle">【類比推論核心】</text>
+      <text x="325" y="64" font-family="-apple-system, sans-serif" font-size="10" fill="#1e293b" text-anchor="middle">PULSAR 裸機推論引擎</text>
+      <text x="325" y="82" font-family="-apple-system, sans-serif" font-size="8.5" fill="#475569" text-anchor="middle">(20 億參數高維類比空間)</text>
+      
+      <!-- IRQ Interrupt Tag -->
+      <rect x="250" y="93" width="150" height="22" rx="3" fill="#fee2e2" stroke="#ef4444" stroke-width="1"/>
+      <text x="325" y="108" font-family="monospace" font-size="8" font-weight="700" fill="#b91c1c" text-anchor="middle">⚡ IRQ 原子輪詢煞車鈕</text>
+
+      <!-- Arrow 2 -> 3 -->
+      <line x1="420" y1="72" x2="478" y2="72" stroke="#0284c7" stroke-width="1.8" marker-end="url(#arrow)"/>
+      <text x="450" y="65" font-family="-apple-system, sans-serif" font-size="7.5" fill="#64748b" text-anchor="middle">候選資料</text>
+
+      <!-- Step 3: Gate Box -->
+      <polygon points="530,25 590,72 530,120 470,72" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="530" y="68" font-family="-apple-system, sans-serif" font-size="9" font-weight="700" fill="#b91c1c" text-anchor="middle">0/100 剛性閘門</text>
+      <text x="530" y="82" font-family="-apple-system, sans-serif" font-size="7.5" fill="#7f1d1d" text-anchor="middle">布林檢驗</text>
+
+      <!-- Pass Branch -->
+      <line x1="590" y1="72" x2="638" y2="72" stroke="#059669" stroke-width="1.8" marker-end="url(#arrow-green)"/>
+      <text x="614" y="65" font-family="-apple-system, sans-serif" font-size="8" font-weight="700" fill="#059669" text-anchor="middle">100分放行</text>
+
+      <!-- Step 4: Storage Box -->
+      <rect x="640" y="32" width="110" height="80" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+      <text x="695" y="58" font-family="-apple-system, sans-serif" font-size="10" font-weight="700" fill="#047857" text-anchor="middle">實體資料庫</text>
+      <text x="695" y="78" font-family="-apple-system, sans-serif" font-size="8.5" fill="#065f46" text-anchor="middle">ACID 安全寫入</text>
+      <text x="695" y="96" font-family="monospace" font-size="8" fill="#059669" text-anchor="middle">Commit OK</text>
+
+      <!-- Rework Loop (Fail Branch) -->
+      <path d="M 530 120 L 530 138 L 325 138 L 325 125" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#arrow-red)"/>
+      <text x="430" y="134" font-family="-apple-system, sans-serif" font-size="8" font-weight="600" fill="#dc2626" text-anchor="middle">0分瑕疵退件：PID 自適應阻尼重工迴圈 (Rework)</text>
+    </svg>
+    <div class="diagram-caption">圖 1：PULSAR 神經符號雙軌約束全系統架構拓撲圖</div>
+  </div>
+
+  <!-- Section 2 -->
+  <h2>2. 模組一：語意啟動引導器 (Semantic Bootloader)</h2>
+  <p>
+    <strong>【工程原理】</strong> 製造業資料庫往往充斥長達數十年的老舊 dBASE (DBF)、FoxPro 或特殊長度限制之關聯式結構。傳統做法依靠人工撰寫提示詞，但資料庫規格只要一異動，Prompt 即刻失效。語意啟動引導器在推論任務初始化時，直接對底層資料庫實體進行自適應解析，自動提取 Schema、欄位物理字元長度、列舉選項（Enum）與校驗常數，即時編譯為高密度「神經突觸認知地圖（Synapse Map）」，並以零拷貝技術注入底層上下文快取（Context Cache）。
+  </p>
+  <div class="formula-box">
+    \(\mathcal{S}_{\text{Legacy-DB}} \xrightarrow{\text{Auto-Scan}} \mathcal{C}_{\text{Constraints}} \xrightarrow{\text{Compile}} \mathbf{M}_{\text{Synapse}} \hookrightarrow \mathbf{X}_{\text{Context Cache}}\)
+  </div>
+  <div class="poka-yoke-box">
+    <strong>🏭 工廠防呆對照 (Poka-Yoke)：</strong>
+    「如同工廠開工前，工長不靠口頭吩咐，而是由自動化治具直接跑去倉庫把所有模具規格與工差上限抄下來，刻成一塊『不可更改的數位憲法石板』硬塞給組裝老師傅，確立今天的絕對作業邊界。」
+  </div>
+
+  <!-- Section 3 -->
+  <h2>3. 模組二：混合 Token 路由與 0/100 剛性閘門 (Hybrid Token Routing &amp; 0/100 Gate)</h2>
+  <p>
+    <strong>【工程原理】</strong> 解決大模型輸出隨機性的根本方法是「類比生成與數位檢驗徹底解耦」。AI 負責對發票掃描件、語音、非結構化自然語言進行模糊語意理解與特徵歸納；但任何進入生產系統的資料，必須通過一道純二進位的剛性布林閘門（Deterministic Digital Gate）。
+  </p>
+  <ul>
+    <li><strong>100 分 (Pass)：</strong> 統編校驗碼乘數演算正確、借貸平衡 \(\sum\text{Dr} = \sum\text{Cr}\)、實體庫存 \(\text{Stock} \ge 0\)，閘門無條件放行並寫入實體資料庫。</li>
+    <li><strong>0 分 (Reject)：</strong> 只要有 1 個位元組溢出或校驗碼錯誤，閘門物理鎖死，立刻啟動<strong>閉環 PID 阻尼自癒控制器 (Closed-Loop PID Damping)</strong>，根據錯誤偏差動態調節推論溫度（Temperature）與抑制參數，迫使模型跳脫死循環並重構輸出。</li>
+  </ul>
+  <div class="poka-yoke-box">
+    <strong>🏭 工廠防呆對照 (Poka-Yoke)：</strong>
+    「讓最靈巧的老師傅（AI）負責打磨複雜工件；但在輸送帶的最末端，架設一把全自動高精度雷射千分尺（剛性閘門）。工件只要公差超標 0.01mm，閘門立刻無情踢除，直接退回工位逼迫重新研磨，絕不讓任何不良品流入下水道！」
+  </div>
+
+  <!-- Section 4 -->
+  <h2>4. 模組三：硬體級非同步中斷機制 (Hardware-Level Asynchronous IRQ Interrupt)</h2>
+  <p>
+    <strong>【工程原理】</strong> 現代自回歸推論一旦啟動便佔滿 CPU 向量管線，外部軟體若想干預往往只能強制終止作業系統執行緒（Kill Process），導致暫存器記憶與 KV Cache 瞬間崩毀。PULSAR 裸機推論引擎在 x86-64 組合語言主迴圈之每步（Per-Token Step）植入極低開銷（延遲 &lt; 5 奈秒）的原子狀態輪詢。
+  </p>
+  <p>
+    當外部監控程式或操作者輸入觸發字詞（如 <code>!AI STOP</code>）或硬體傳感器越界訊號時，系統直接在硬體暫存器層級拉起中斷旗標（Interrupt Flag），強制定格當前計算，並支援在「零重啟進程、不丟失歷史上下文記憶」的前提下，熱置換（Hot-Reload）新憲法地圖並切換任務。
+  </p>
+  <div class="poka-yoke-box">
+    <strong>🏭 工廠防呆對照 (Poka-Yoke)：</strong>
+    「傳統大型沖壓機開動後若要緊急煞車只能拔掉全廠總電源。我們在機器人核心神經裡裝設了『物理級紅色緊急煞車拉繩』。主管只要在遠端拉動開關，機器人千分之一秒內定格於半空中，零件位置毫釐不差，換上新圖紙後一鍵繼續運行！」
+  </div>
+
+  <!-- Section 5 -->
+  <h2>5. 系統防禦性規格與落地對照表 (Specifications &amp; Defensive Matrix)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 20%;">技術模組</th>
+        <th style="width: 25%;">傳統純 AI 做法 (脆弱痛點)</th>
+        <th style="width: 32%;">PULSAR 雙軌防呆工程實作</th>
+        <th style="width: 23%;">防禦性先前技術 (Prior Art) 範疇</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>語意引導器</strong><br>(Semantic Bootloader)</td>
+        <td>手動撰寫長篇提示詞，DB 格式修改即崩潰；額外浪費大量 Token。</td>
+        <td>啟動時自動掃描 DBF/SQL 綱要，編譯成 Synapse Map 零拷貝注入快取。</td>
+        <td>異質資料庫物理綱要至 LLM 上下文快取之動態轉譯與零拷貝注入法。</td>
+      </tr>
+      <tr>
+        <td><strong>0/100 剛性閘門</strong><br>(Digital Gate)</td>
+        <td>盲目信任模型輸出，讓幻覺數值直接污染正式帳冊與工令。</td>
+        <td>類比思考與數位檢驗徹底解耦，100 分放行、0 分物理熔斷拒絕。</td>
+        <td>高維神經生成輸出端之硬性離散布林過濾與交易原子性防護機制。</td>
+      </tr>
+      <tr>
+        <td><strong>閉環阻尼自癒</strong><br>(PID Rework Loop)</td>
+        <td>失敗時無腦單向 Retry，模型極易陷入相同幻覺之死循環。</td>
+        <td>以 PID 阻尼演算法將驗證異常計算為誤差動態調控超參數，引導收斂。</td>
+        <td>大型語言模型生成錯誤特徵至推論超參數之閉環阻尼自適應調節法。</td>
+      </tr>
+      <tr>
+        <td><strong>硬體非同步中斷</strong><br>(Asynchronous IRQ)</td>
+        <td>推論過程無法打斷，失控時只能殺死進程，上下文快取全毀。</td>
+        <td>裸機組合語言迴圈原子狀態輪詢，暫存器原地定格，支援免重啟熱載入。</td>
+        <td>神經推論向量迴圈中之微秒級原子中斷、狀態定格與動態熱置換架構。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Section 6 -->
+  <h2>6. 結論與公開防禦聲明 (Conclusion &amp; Defensive Statement)</h2>
+  <p>
+    本系統之核心價值在於徹底屏除軟體界浮誇之包裝，將實體工廠幾十年來千錘百煉的「防呆」精神刻入現代 AI 晶片架構之中。藉由此份技術指南之發布，上述四大發明點已於 2026 年 10 月正式構成公開先前技術（Prior Art），享有全球不可撤回之公開使用與防禦權益。
+  </p>
+  <div style="margin-top: 14px; padding-top: 8px; border-top: 1px solid #cbd5e1; font-size: 8pt; color: #64748b; text-align: center;">
+    <strong>PULSAR Architectural Guide (PULSAR-ARCH-2026-001)</strong> · Published by Kuo-Ting Tsai &amp; Shin-Rung Tsai · Tainan, Taiwan · All Technical Prior Art Codified
+  </div>
+
+</body>
+</html>

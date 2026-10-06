@@ -4,6 +4,7 @@
 > 🌐 **Official Telemetry Showcase**: [https://pulsar-tracer.web.app](https://pulsar-tracer.web.app)  
 > 📄 **Technical Whitepaper (PDF)**: [Download Whitepaper (REV-035)](public_release/PULSAR_Technical_Whitepaper.pdf)  
 > 📑 **Technical Note Part 2 (PDF)**: [Null-Space Projection & Closed-Loop Damping (PULSAR-TECHNOTE-2026-002)](public_release/PULSAR_Technote_Part2_NullSpace.pdf)  
+> 📐 **Architectural Note (PDF)**: [Dual-Track Constraints & Factory Poka-Yoke (PULSAR-ARCH-2026-001)](public_release/PULSAR_Architecture_Guide.pdf)  
 > 📦 **Monolithic Binary Release**: [Download Release Package (~3.3 MB)](public_release/pulsar_tracer_release.zip)  
 > 
 > **Architected & Directed by**:  
