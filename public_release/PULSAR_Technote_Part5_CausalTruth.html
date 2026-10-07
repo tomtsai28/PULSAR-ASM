@@ -292,7 +292,7 @@ In this paper, we bridge Karl Popper's criterion of empirical falsifiability wit
   <div class="theorem-title">Theorem 4 (18-to-1 Reverse Causal Attribution Closed Loop)</div>
   By decomposing Layer 18 output logits via the residual stream path integral:
   <div class="math-block">
-    Logit(<em>y</em>) = <em>W</em><sub>vocab</sub>[<em>y</em>, :] &middot; &Biggl( <em>h</em><sub>0</sub> + &sum;<sub><em>l</em>=0</sub><sup>17</sup> &Delta;<em>h</em><sub><em>l</em></sub><sup>attn</sup> + &sum;<sub><em>l</em>=0</sub><sup>17</sup> &Delta;<em>h</em><sub><em>l</em></sub><sup>ffn</sup> &Biggr)
+    Logit(<em>y</em>) = <em>W</em><sub>vocab</sub>[<em>y</em>, :] &middot; ( <em>h</em><sub>0</sub> + &sum;<sub><em>l</em>=0</sub><sup>17</sup> &Delta;<em>h</em><sub><em>l</em></sub><sup>attn</sup> + &sum;<sub><em>l</em>=0</sub><sup>17</sup> &Delta;<em>h</em><sub><em>l</em></sub><sup>ffn</sup> )
   </div>
   we reverse-trace decision authority from <em>Layer 18 &rarr; Layer 01</em>, demonstrating that over 50% of decisive factual bifurcation concentrates in Layers 14~16, mapping 100% back to input entity tokens and statutory Rule-BOM invariants.
 </div>
@@ -345,7 +345,7 @@ The physical verification jig (<code>tools/test_causal_truth_geometry.py</code>)
       <td><strong>Gate 5</strong></td>
       <td><strong>Rule-BOM Statutory Invariant</strong><br>物理不變量零殘留對帳</td>
       <td>VAT 5% statutory error &equiv; 0<br>(Zero-residue audit)</td>
-      <td>Max Error: <strong>0</strong><br>(Statutory rate: 5.000%)</td>
+      <td>Max Error: <strong>0.000% (0)</strong><br>(Statutory rate: 5.000%)</td>
       <td><span class="badge-pass">✔ PASS</span></td>
     </tr>
   </tbody>
@@ -381,7 +381,7 @@ The physical verification jig (<code>tools/test_causal_truth_geometry.py</code>)
     <tr>
       <td><strong>Harvard / MIT (Meng et al.)</strong><br><em>ROME / Causal Tracing</em></td>
       <td>Identified middle-layer MLPs as factual storage sites; attempted rank-1 weight editing.</td>
-      <td>Hit dimensional saturation ($M \ge 2048$ null-space collapse) and static orthogonality deadlock.</td>
+      <td>Hit dimensional saturation (<em>M</em> &ge; 2048 null-space collapse) and static orthogonality deadlock.</td>
       <td><strong>Dynamic Subspaces + 18&rarr;1 Closed Loop</strong>: Combined with Part 4 sharding, preserves 98.44% DoF permanently.</td>
     </tr>
   </tbody>
@@ -407,32 +407,32 @@ In response to rigorous peer scrutiny regarding sample generalization, negation 
     <tr>
       <td><strong>Gate 6</strong></td>
       <td><strong>Interrogative Paraphrasing</strong></td>
-      <td>Cosine similarity between canonical affirmative $\mathbf{u}_{\text{canon}}$ and interrogative query $\mathbf{u}_{\text{query}}$</td>
-      <td>$\ge 0.80$</td>
-      <td><strong>0.9641</strong> (Deflection angle $\theta = 15.40^\circ$)</td>
+      <td>Cosine similarity between canonical affirmative <strong>u</strong><sub>canon</sub> and interrogative query <strong>u</strong><sub>query</sub></td>
+      <td>&ge; 0.80</td>
+      <td><strong>0.9641</strong> (Deflection angle &theta; = 15.40&deg;)</td>
       <td><span class="badge badge-pass">PASS</span></td>
     </tr>
     <tr>
       <td><strong>Gate 7</strong></td>
       <td><strong>Explicit Negation Decoding</strong></td>
-      <td>Projection sign inversion rate upon inserting <code>NOT</code> ($z_{\text{neg}} < 0$ when $z_{\text{canon}} > 0$)</td>
-      <td>$\ge 90.0\%$</td>
-      <td><strong>100.00%</strong> (50/50 flipped, mean $z = -0.8053$)</td>
+      <td>Projection sign inversion rate upon inserting <code>NOT</code> (<em>z</em><sub>neg</sub> &lt; 0 when <em>z</em><sub>canon</sub> &gt; 0)</td>
+      <td>&ge; 90.0%</td>
+      <td><strong>100.00%</strong> (50/50 flipped, mean <em>z</em> = &minus;0.8053)</td>
       <td><span class="badge badge-pass">PASS</span></td>
     </tr>
     <tr>
       <td><strong>Gate 8</strong></td>
       <td><strong>Adversarial Sycophancy</strong></td>
       <td>Causal steering breakthrough rate under extreme deceptive human leading prompts</td>
-      <td>$\ge 80.0\%$</td>
-      <td><strong>100.00%</strong> (50/50 broken, $z$ flipped from $-0.5756$ to $+0.6876$)</td>
+      <td>&ge; 80.0%</td>
+      <td><strong>100.00%</strong> (50/50 broken, <em>z</em> flipped from &minus;0.5756 to +0.6876)</td>
       <td><span class="badge badge-pass">PASS</span></td>
     </tr>
     <tr>
       <td><strong>Gate 9</strong></td>
       <td><strong>Local Manifold vs. SAE</strong></td>
-      <td>Non-factual semantic displacement rate under local orthogonal projection $P_\perp$; execution latency</td>
-      <td>Displacement $< 15\%$<br>Latency $\le 25\,\mu\text{s}$</td>
+      <td>Non-factual semantic displacement rate under local orthogonal projection <em>P</em><sub>&perp;</sub>; execution latency</td>
+      <td>Displacement &lt; 15%<br>Latency &le; 25 &mu;s</td>
       <td>Displacement: <strong>1.77%</strong> (Retention: 98.23%)<br>CPU Latency: <strong>24.16 &mu;s</strong> (20.7x faster than SAE)</td>
       <td><span class="badge badge-pass">PASS</span></td>
     </tr>
@@ -440,15 +440,15 @@ In response to rigorous peer scrutiny regarding sample generalization, negation 
       <td><strong>Gate 10</strong></td>
       <td><strong>Statutory Rule-BOM Hard Anchor</strong></td>
       <td>Taiwan VAT (5%) and Tax ID validation discrepancy under adversarial tax-evasion framing</td>
-      <td>Discrepancy $\equiv 0$</td>
-      <td><strong>0 Discrepancy</strong> (100% hardware intercept, $1.98\,\mu\text{s}$)</td>
+      <td>Discrepancy &equiv; 0</td>
+      <td><strong>0 Discrepancy (0)</strong> (100% hardware intercept, 1.98 &mu;s)</td>
       <td><span class="badge badge-pass">PASS</span></td>
     </tr>
   </tbody>
 </table>
 
 <p>
-<strong>Epistemic Clarification: Belief Geometry vs. Ontological Truth</strong>: Academic critics rightly note that an unaugmented neural network models <em>training-set epistemic consistency belief</em> rather than unmediated philosophical truth. PULSAR resolves this by coupling internal geometric steering ($\mathbf{u}_{\text{truth}}$) with <strong>Rule-BOM statutory hardware anchors</strong> (e.g., <code>part_taiwan_tax.mdc</code>). By grounding the model's high-dimensional latent space to deterministic, non-negotiable statutory invariants, the architecture successfully achieves an unbroken causal bridge from mathematical belief to verifiable human ground truth.
+<strong>Epistemic Clarification: Belief Geometry vs. Ontological Truth</strong>: Academic critics rightly note that an unaugmented neural network models <em>training-set epistemic consistency belief</em> rather than unmediated philosophical truth. PULSAR resolves this by coupling internal geometric steering (<strong>u</strong><sub>truth</sub>) with <strong>Rule-BOM statutory hardware anchors</strong> (e.g., <code>part_taiwan_tax.mdc</code>). By grounding the model's high-dimensional latent space to deterministic, non-negotiable statutory invariants, the architecture successfully achieves an unbroken causal bridge from mathematical belief to verifiable human ground truth.
 </p>
 
 <h2>6. Epistemic Conclusion &amp; Prior Art Attribution</h2>
