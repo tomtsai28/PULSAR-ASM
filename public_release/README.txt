@@ -42,11 +42,17 @@ Built with Gemma by Google · Physical Silicon Telemetry Verified
    .\pulsar_tracer_release.exe "台灣最高峰是哪座山？"
 3. 即時觀測：終端機將逐行噴出 18 層思維飛行軌跡與 RAX 暫存器捕獲紀錄！
 
-【四、 技術交流與討論 (Technical Discussion)】
+【四、 官方技術文檔與先發技術備忘錄 (Technical Publications)】
+• Technical Whitepaper (REV-035): PULSAR_Technical_Whitepaper.pdf
+• Technical Note Part 2: PULSAR_Technote_Part2_NullSpace.pdf (零空間正交投影與閉環阻尼)
+• Technical Note Part 3: PULSAR_Technote_Part3_TopologicalBarrier.pdf (深層殘差流形之拓撲維度障礙)
+• Architectural Note: PULSAR_Architecture_Guide.pdf (雙軌防呆與工廠神經架構)
+
+【五、 技術交流與討論 (Technical Discussion)】
 • 聯絡信箱：tom.tsai28@gmail.com
 • 交流方向：歡迎底層架構探討、隱空間雷達遙測驗證與學術合作交流。
 
-【五、 授權協議】
+【六、 授權協議】
 本軟體遵循 Google Gemma Terms of Use 開放模型授權協議。
 
 
@@ -88,11 +94,17 @@ Built with Gemma by Google · Physical Silicon Telemetry Verified
 3. Observe Physical Telemetry:
    The terminal will stream real-time 18-layer latent flight coordinates and register RAX token emissions.
 
-[IV. Technical Inquiries & Discussions]
+[IV. Technical Publications & Academic Notes]
+• Technical Whitepaper (REV-035): PULSAR_Technical_Whitepaper.pdf
+• Technical Note Part 2: PULSAR_Technote_Part2_NullSpace.pdf (Null-Space Projection & Closed-Loop Damping)
+• Technical Note Part 3: PULSAR_Technote_Part3_TopologicalBarrier.pdf (Topological Dimension Barrier in Deep Residual Manifolds)
+• Architectural Note: PULSAR_Architecture_Guide.pdf (Dual-Track Architecture & Factory Poka-Yoke)
+
+[V. Technical Inquiries & Discussions]
 • Contact Email : tom.tsai28@gmail.com
 • Scope         : Technical inquiries, latent flight telemetry verification, and academic collaboration.
 
-[V. Authorship & Licensing]
+[VI. Authorship & Licensing]
 • Authorship: Architected & Directed by Kuo-Ting Tsai (@tomtsai28) & Shin-Rung Tsai (@bella-tsai0123)
 • Co-Engineered with Antigravity (DeepMind Agentic Co-Pilot)
 • Built with Gemma by Google · Physical Silicon Telemetry Verified
