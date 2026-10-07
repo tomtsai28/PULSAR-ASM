@@ -47,6 +47,7 @@ Built with Gemma by Google · Physical Silicon Telemetry Verified
 • Technical Note Part 2: PULSAR_Technote_Part2_NullSpace.pdf (零空間正交投影與閉環阻尼)
 • Technical Note Part 3: PULSAR_Technote_Part3_TopologicalBarrier.pdf (深層殘差流形之拓撲維度障礙)
 • Technical Note Part 4: PULSAR_Technote_Part4_DynamicAnchors.pdf (動態語境子空間與 18 層階梯分流機制)
+• Technical Note Part 5: PULSAR_Technote_Part5_CausalTruth.pdf (內在真理幾何之因果可證偽性與 18 至 1 逆向因果對帳)
 • Architectural Note: PULSAR_Architecture_Guide.pdf (雙軌防呆與工廠神經架構)
 
 【五、 技術交流與討論 (Technical Discussion)】
@@ -100,6 +101,7 @@ Built with Gemma by Google · Physical Silicon Telemetry Verified
 • Technical Note Part 2: PULSAR_Technote_Part2_NullSpace.pdf (Null-Space Projection & Closed-Loop Damping)
 • Technical Note Part 3: PULSAR_Technote_Part3_TopologicalBarrier.pdf (Topological Dimension Barrier in Deep Residual Manifolds)
 • Technical Note Part 4: PULSAR_Technote_Part4_DynamicAnchors.pdf (Dynamic Contextual Subspaces & Cascaded Manifold Sharding)
+• Technical Note Part 5: PULSAR_Technote_Part5_CausalTruth.pdf (Causal Truth Geometry & 18-to-1 Reverse-Attribution Closed Loop)
 • Architectural Note: PULSAR_Architecture_Guide.pdf (Dual-Track Architecture & Factory Poka-Yoke)
 
 [V. Technical Inquiries & Discussions]
