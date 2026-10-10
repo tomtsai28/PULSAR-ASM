@@ -46,10 +46,9 @@ Built with Gemma by Google · Physical Silicon Telemetry Verified
 • Technical Whitepaper (REV-035): PULSAR_Technical_Whitepaper.pdf
 • Technical Note Part 2: PULSAR_Technote_Part2_NullSpace.pdf (零空間正交投影與閉環阻尼)
 • Technical Note Part 3: PULSAR_Technote_Part3_TopologicalBarrier.pdf (深層殘差流形之拓撲維度障礙)
-• Technical Note Part 4: PULSAR_Technote_Part4_DynamicAnchors.pdf (動態語境子空間與 18 層階梯分流機制)
-• Technical Note Part 5: PULSAR_Technote_Part5_CausalTruth.pdf (內在真理幾何之因果可證偽性與 18 至 1 逆向因果對帳)
-• Thought Special Issue 01: PULSAR_Special_Essay_Genesis_of_Mind.pdf (探索人心：理性與感性的神經演化源頭)
-• Architectural Note: PULSAR_Architecture_Guide.pdf (雙軌防呆與工廠神經架構)
+• Technical Note Part 4: PULSAR_Technote_Part4_DynamicAnchors.pdf (動態語境子空間與級聯流形分片, REV-048-REAL)
+• Technical Note Part 5: PULSAR_Technote_Part5_CausalTruth.pdf (內在真理幾何之因果可證偽性與 18 至 1 逆向歸因, REV-049-REAL)
+• Architectural Note: PULSAR_Architecture_Guide.pdf (系統架構與防呆整合設計)
 
 【五、 技術交流與討論 (Technical Discussion)】
 • 聯絡信箱：tom.tsai28@gmail.com
@@ -101,10 +100,9 @@ Built with Gemma by Google · Physical Silicon Telemetry Verified
 • Technical Whitepaper (REV-035): PULSAR_Technical_Whitepaper.pdf
 • Technical Note Part 2: PULSAR_Technote_Part2_NullSpace.pdf (Null-Space Projection & Closed-Loop Damping)
 • Technical Note Part 3: PULSAR_Technote_Part3_TopologicalBarrier.pdf (Topological Dimension Barrier in Deep Residual Manifolds)
-• Technical Note Part 4: PULSAR_Technote_Part4_DynamicAnchors.pdf (Dynamic Contextual Subspaces & Cascaded Manifold Sharding)
-• Technical Note Part 5: PULSAR_Technote_Part5_CausalTruth.pdf (Causal Truth Geometry & 18-to-1 Reverse-Attribution Closed Loop)
-• Thought Special Issue 01: PULSAR_Special_Essay_Genesis_of_Mind.pdf (The Genesis of Rationality and Sensibility)
-• Architectural Note: PULSAR_Architecture_Guide.pdf (Dual-Track Architecture & Factory Poka-Yoke)
+• Technical Note Part 4: PULSAR_Technote_Part4_DynamicAnchors.pdf (Dynamic Contextual Subspaces & Cascaded Manifold Sharding, REV-048-REAL)
+• Technical Note Part 5: PULSAR_Technote_Part5_CausalTruth.pdf (Causal Truth Geometry & 18-to-1 Reverse-Attribution Closed Loop, REV-049-REAL)
+• Architectural Note: PULSAR_Architecture_Guide.pdf (System Architecture & Factory Poka-Yoke)
 
 [V. Technical Inquiries & Discussions]
 • Contact Email : tom.tsai28@gmail.com
@@ -112,7 +110,7 @@ Built with Gemma by Google · Physical Silicon Telemetry Verified
 
 [VI. Authorship & Licensing]
 • Authorship: Architected & Directed by Kuo-Ting Tsai (@tomtsai28) & Shin-Rung Tsai (@bella-tsai0123)
-• Co-Engineered with Antigravity (DeepMind Agentic Co-Pilot)
+• Co-Engineered with Antigravity (Agentic Co-Pilot)
 • Built with Gemma by Google · Physical Silicon Telemetry Verified
 • License: Distributed under Google Gemma Terms of Use.
 ================================================================================
